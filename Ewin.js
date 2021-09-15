@@ -12,8 +12,8 @@
             '<p>[Message]</p>' +
             '</div>' +
             '<div class="modal-footer">' +
-            '<button type="button" class="btn btn-primary green ok" data-dismiss="modal">[BtnOk]</button>' +
-            '<button type="button" class="btn btn-primary green cancel" data-dismiss="modal">[BtnCancel]</button>' +
+            '<button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>' +
+            '<button type="button" class="btn btn-primary ok" data-dismiss="modal">[BtnOk]</button>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -41,8 +41,8 @@
             options = $.extend({}, {
                 title: "Operation hints",
                 message: "Hint content",
+                btnok: "Confirm",
                 btncl: "Cancel",
-                btnok: "OK",
                 width: 200,
                 auto: false
             }, options || {});
@@ -52,8 +52,8 @@
                     Id: modalId,
                     Title: options.title,
                     Message: options.message,
-                    BtnCancel: options.btncl,
-                    BtnOk: options.btnok
+                    BtnOk: options.btnok,
+                    BtnCancel: options.btncl
                 }[key];
             });
             $('body').append(content);
@@ -76,8 +76,8 @@
                 }
                 var id = init(options);
                 var modal = $('#' + id);
-                modal.find('.cancel').hide();
                 modal.find('.ok').removeClass('btn-success').addClass('btn-primary');
+                modal.find('.cancel').hide();
 
                 return {
                     id: id,
@@ -98,15 +98,14 @@
             confirm: function (options) {
                 var id = init(options);
                 var modal = $('#' + id);
-                modal.find('.cancel').show();
                 modal.find('.ok').removeClass('btn-primary').addClass('btn-success');
-                
+                modal.find('.cancel').show();
                 return {
                     id: id,
                     on: function (callback) {
                         if (callback && callback instanceof Function) {
-                            modal.find('.cancel').click(function () { callback(false); });
                             modal.find('.ok').click(function () { callback(true); });
+                            modal.find('.cancel').click(function () { callback(false); });
                         }
                     },
                     hide: function (callback) {
