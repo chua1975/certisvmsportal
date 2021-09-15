@@ -1,0 +1,175 @@
+﻿@using CertisVMSPortal.Models
+@model CertisVMS.Bll.ViewModels.DorsconViewModel
+@using Newtonsoft.Json;
+@{
+                /**/
+
+                /**/
+
+                /**/
+
+                ViewBag.Title = "Details";
+                Layout = "~/Views/Shared/_Layout" + Session["Template"] + ".cshtml";
+}
+@section PageContent{
+    @Html.Partial("BreadCrumb", new BreadCrumb(new List<BreadCrumbItem>()
+{
+new BreadCrumbItem(){Link = Url.Action("Index","Dorscon"),Text = "Dorscon"},
+}, new BreadCrumbItem() { Link = Url.Action("#", "Dorscon"), Text = "Detail" }))
+
+    <br />
+
+    <div class="portlet box" style="margin-top:10px;">
+        <div class="portlet-title">
+            <div class="content-title">
+                Dorscon Category
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <!-- BEGIN FORM-->
+            <br />
+            <form action="#" class="form-horizontal">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="control-label col-md-5">Dorscon Name</label>
+                                <div class="col-md-7 validationboxnormal">
+                                    <label class="col-md-9"> @Model.DorsconName</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="control-label col-md-5">Dorscon Level</label>
+                                <div class="col-md-7 validationboxnormal">
+                                    <label class="col-md-9"> @Model.DorsconLevel</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="control-label col-md-5">Dorscon DorsconColor</label>
+                                <div class="col-md-7 validationboxnormal">
+                                    <input id="color" type="text" value="" style="background-color:@Model.DorsconColor" class="colorpickerinput" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+                    </div>
+                    <br />
+
+
+                    <!--/row-->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="control-label col-md-5">Dorscon Description</label>
+                                <div class="col-md-7">
+                                    <label class="col-md-9"> @Model.DorsconDescription</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="control-label col-md-5">Status</label>
+                                <div class="col-md-7">
+                                    <label class="col-md-9"> @Model.Status</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-offset-1 col-md-6">
+                                    <a href="@Url.Action("Edit",new { id = @Model.DorsconID })" class="btn btn_blue">
+                                        <img class="img-edit" width="28" height="21">Edit
+                                    </a>
+                                    <a href="@Url.Action("Index")" class="btn btn_blue">
+                                        <img class="img-back" width="19" height="21">
+                                        Back To List
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-offset-2 col-md-10">
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- END FORM-->
+        </div>
+    </div>
+}
+
+@section QuickAction
+{
+    <ul>
+        <li>
+            <a href="@Url.Action("Create")" target="" class="active">
+                <span>Create New</span>
+                <i class="icon-plus"></i>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")" target="" class="active">
+                <span>Back To List</span>
+            </a>
+        </li>
+    </ul>
+}
+
+@section scripts{
+    <style>
+        .colorpickerinput {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #2975bb;
+            border-radius: 4px;
+            background-color: #fff;
+            text-indent: 20px;
+            margin-left: 10px;
+        }
+    </style>
+}

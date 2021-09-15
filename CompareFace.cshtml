@@ -1,0 +1,209 @@
+﻿@using System.Configuration
+@using CertisVMS.Bll.ViewModels
+@using CertisVMSPortal.Helpers
+@using CertisVMSPortal.Models
+@using CertisVMS.Model.Constant
+@{
+    ViewBag.Title = "Compare Faces";
+    Layout = "~/Views/Shared/_Layout" + Session["Template"] + ".cshtml";
+}
+
+
+@section PageContent{
+    @Html.Partial("BreadCrumb", new BreadCrumb(new List<BreadCrumbItem>()
+    {
+        new BreadCrumbItem(){Link = Url.Action("Index","Visitor"),Text = "FR" }
+    }, new BreadCrumbItem(){ Link = Url.Action("CompareFace", "PortalFR"), Text = "Compare Faces" } ))
+
+    @using (Html.BeginForm("CompareFace", "PortalFR", new { }, FormMethod.Post, new { @id = "from1", novalidate = "novalidate", autocomplete = "off" }))
+    {
+
+        @Html.AntiForgeryToken()
+
+        <div class="portlet box" style="margin-top:10px">
+            <div class="portlet-title">
+                <div class="content-title">
+                    Compare Faces
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <!-- BEGIN FORM-->
+                <div>
+                    <div class="form-body">
+                        @*<h3 class="form-section">Visitor Profile</h3>*@
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <img src=" ~/assets3/layouts/layout/img/profile_photo.jpg" style="width:100px;height:100px" class="img-circle" id="imgPreview" />
+                                        <canvas id="capturedPhoto" width="100" height="100" style="display: none"></canvas>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a class="btn btn_blue" id="btnSnap" style="margin-bottom: 10px">Snap photo now</a>
+
+                                        <div class="fileinput fileinput-new col-md-12 row" data-provides="fileinput">
+                                            <span class="btn btn_blue btn-file">
+                                                <span class="fileinput-new"> Choose from folder </span>
+                                                <span class="fileinput-exists"> Change </span>
+                                                <input id="filePhoto" type="file" name="..." onchange='choosedFile(event)'>
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div id="pnlVideo" style="display: none">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <video id="video" width="100" autoplay></video>
+                                                    <canvas id="canvas" style="display: none" width="500" height="500"></canvas>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <a class="btn btn_blue" id="btnConfirm" style="margin-top:30px">Snap</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <img src=" ~/assets3/layouts/layout/img/profile_photo.jpg" style="width:100px;height:100px" class="img-circle" id="imgPreview2" />
+                                        <canvas id="capturedPhoto2" width="100" height="100" style="display: none"></canvas>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="fileinput fileinput-new col-md-12 row" data-provides="fileinput">
+                                            <span class="btn btn_blue btn-file">
+                                                <span class="fileinput-new"> Choose from folder </span>
+                                                <span class="fileinput-exists"> Change </span>
+                                                <input id="filePhoto2" type="file" name="..." onchange='choosedFile2(event)'>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                     
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row" style="visibility:hidden;">
+                            <div class="col col-md-12">
+                                <br />
+                                <input type="radio" id="rdb1" name="model_name" value="VGG-Face" checked>
+                                <label for="rdb1" class="">VGG-Face</label> &nbsp;&nbsp;
+
+                                <input type="radio" id="rdb2" name="model_name" value="Facenet">
+                                <label for="rdb2">Google Facenet</label>&nbsp;&nbsp;
+
+                                <input type="radio" id="rdb3" name="model_name" value="DeepFace">
+                                <label for="rdb3">Facebook DeepFace</label>&nbsp;&nbsp;
+
+                                <input type="radio" id="rdb4" name="model_name" value="OpenFace">
+                                <label for="rdb4">OpenFace</label>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col col-md-12">
+                                <br />
+                                <input type="button" class="btn btn-primary green" value="Compare Faces" id="btnVerify" />
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                    <br />
+
+                </div>
+            </div>
+        </div>
+
+    }
+}
+
+
+
+
+@section QuickAction
+{
+    <ul>
+        <li>
+            <a href="@Url.Action("Index")" target="" class="active">
+                <span>List</span>
+                <i class="icon-list"></i>
+            </a>
+        </li>
+    </ul>
+}
+
+
+@section scripts{
+    <script src="~/Scripts/Components/webcam-ex.js"></script>
+    <script>
+
+        $("#btnVerify").click(function () {
+            verifyFace();
+        });
+
+        function verifyFace() {
+            debugger;
+            var photo64 = document.getElementById("imgPreview").src;
+            var photo64_2 = document.getElementById("imgPreview2").src;
+
+            if (photo64.length < 100 || photo64_2.length < 100) {
+                alert("Please select two photos.");
+                return false;
+            }
+            var radioValue = $("input[name='model_name']:checked").val();
+            var photos = { "base64_1": photo64, "base64_2": photo64_2, "model_name": radioValue};
+            var paraData = JSON.stringify(photos);
+            $.blockUI({ message: '<h3>Please wait... ' + '</h3>' });
+            fetch(GetBaseUrl() + '/PortalFr/oneToOneDeepFace',
+                {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: paraData
+                })
+                .then(function (response) {
+                    debugger;
+                    return response.json();
+                })
+                .then(function (response) {
+                    if (response != undefined && response.pair_1 != undefined && response.pair_1.verified == true) {
+                        toastr.success("Face matched.");
+                    } else {
+                        toastr.error('Faces does not matched');
+                    }
+                    $.unblockUI();
+                }).catch(function () {
+                    toastr.error('Failed to compare');
+                    $.unblockUI();
+                });
+        }
+
+        $(document).ready(function () {
+
+        });
+
+        function choosedFile2(evt) {
+            var fileInput = evt.target.files;
+            if (fileInput.length > 0) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgPreview2').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(fileInput[0]);
+            } else {
+                alert("no image found");
+            }
+        }
+
+    </script>
+}

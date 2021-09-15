@@ -1,0 +1,217 @@
+﻿@using CertisVMSPortal.Models
+@using CertisVMS.Bll.QueryCache
+@using CertisVMS.Model.Constant.ErrorMessageKey
+@using Newtonsoft.Json;
+
+@model CertisVMS.Bll.ViewModels.DorsconViewModel
+@{
+    /**/
+
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout" + Session["Template"] + ".cshtml";
+
+    var confirmActiveDorscon = CacheFetch.DisplayMessage(MessageKeyVMS.CurrentExistActiveDorscon);
+}
+
+@section PageContent{
+    @Html.Partial("BreadCrumb", new BreadCrumb(new List<BreadCrumbItem>()
+{
+new BreadCrumbItem(){Link = Url.Action("Index","Dorscon"),Text = "Dorscon"},
+}, new BreadCrumbItem() { Link = Url.Action("#", "Dorscon"), Text = "Edit" }))
+
+    <br />
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.CreatedBy)
+        @Html.HiddenFor(x => x.DateCreated)
+
+        <div class="portlet box" style="margin-top:10px;">
+            <div class="portlet-title">
+                <div class="content-title">
+                    Edit Dorscon
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <!-- BEGIN FORM-->
+                <br />
+                <form action="#" class="form-horizontal">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="control-label col-md-5">Dorscon Name<span class="RequiredField">*</span></label>
+                                    <div class="col-md-7 validationboxnormal">
+                                        @Html.EditorFor(x => x.DorsconName, new { htmlAttributes = new { @class = "form-control validationtext", placeholder = "Dorscon Name", maxlength = "10" } })
+                                        @Html.ValidationMessageFor(x => x.DorsconName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+                        </div>
+                        <br />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="control-label col-md-5">Dorscon Level<span class="RequiredField">*</span></label>
+                                    <div class="col-md-7 validationboxnormal">
+                                        @Html.EditorFor(x => x.DorsconLevel, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(x => x.DorsconLevel, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <br />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="control-label col-md-5">Dorscon Color<span class="RequiredField">*</span></label>
+                                    <div class="col-md-7 validationboxnormal">
+                                        <input id="color" type="text" value="" style="background-color:@Model.DorsconColor" class="colorpickerinput" readonly />
+                                        @Html.HiddenFor(x => x.DorsconColor, new { htmlAttributes = new { @class = "form-control", placeholder = "Select Color", id = "DorsconColor" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <br />
+
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="control-label col-md-5">Dorscon Description</label>
+                                    <div class="col-md-7">
+                                        @if (Model == null)
+                                        {
+                                            <textarea class="form-control" name="DorsconDescription" maxlength="1000"></textarea>
+                                        }
+                                        else
+                                        {
+                                            <textarea class="form-control" name="DorsconDescription" maxlength="1000">@Model.DorsconDescription</textarea>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="control-label col-md-5">Status</label>
+                                    <div class="col-md-7">
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(Model => Model.Status, "A", new { @id = "Stauts", @name = "Stauts", @checked = "checked" }) Active
+                                        </label>
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(Model => Model.Status, "I", new { @id = "Stauts", @name = "Stauts" }) InActive
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-offset-1 col-md-6">
+                                        @Html.HiddenFor(x => x.DorsconID)
+                                        <button type="submit" class="btn btn_blue">
+                                            <img class="img-submit" width="26" height="21">
+                                            Save
+                                        </button>
+                                        <a href="@Url.Action("Index")" class="btn btn_blue">
+                                            <img class="img-back" width="19" height="21">
+                                            Back To List
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-offset-2 col-md-10">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- END FORM-->
+            </div>
+        </div>
+    }
+}
+
+@section QuickAction
+{
+    <ul>
+        <li>
+            <a href="@Url.Action("Create")" target="" class="active">
+                <span>Create New</span>
+                <i class="icon-plus"></i>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")" target="" class="active">
+                <span>List</span>
+                <i class="icon-list"></i>
+            </a>
+        </li>
+    </ul>
+}
+
+@section scripts{
+    <link href="~/Content/ValidationMessage.css" rel="stylesheet" />
+    <script src="~/assets3/bootstrap-colorpicker.js"></script>
+    <link href="~/assets3/bootstrap-colorpicker.css" rel="stylesheet" />
+    <style>
+        .colorpickerinput {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #2975bb;
+            border-radius: 4px;
+            //background-color: #fff;
+            text-indent: 20px;
+        }
+    </style>
+
+    <script>
+        $(function () {
+
+            $('#color').colorpicker();
+            $('#color').val('');
+
+            // using an event, to change the color of the .jumbotron background:
+            $('#color').on('change', function (event) {
+                $('#color').css('background-color', event.color.toString()).val('');
+                var selcolor = event.color.toString();
+                $("#DorsconColor").val(selcolor);
+                //$("#DorsconColor").text(event.color.toString());
+            });
+        });
+    </script>
+}

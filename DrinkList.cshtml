@@ -1,0 +1,96 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout" + Session["Template"] + ".cshtml";
+}
+
+@section PageContent{
+    <div class="page-bar">
+        <ul class="page-breadcrumb breadcrumb">
+            <li>
+                <a href="~/">Guest Management System</a>
+                <span class="font_orange">|</span>
+            </li>
+            <li>
+                <span class="font_orange headerTitle">Drink Dashboard</span>
+            </li>
+        </ul>
+    </div>
+    <br />
+    
+    <div id="divInfo" class="box_blue transparent" v-cloak>
+        <label style="margin-bottom:20px;font-weight:700; font-size:20px;">Date: {{GetCurrentDate()}}</label>
+        <template v-for="item in DrinkInfoList">
+            <div class="caption">
+                <span class="caption-subject font-dark bold uppercase" style="font-size:20px;">{{item.LocationName}}</span>
+            </div>
+            <div class="row">
+                <template v-for="(index, itemDrink) in item.DrinkList">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat2 dashboard" style="padding:15px 15px 1px;">
+                            <div class="display">
+                                <div class="number">
+                                    <h3 class="font-green-sharp">
+                                        <span data-counter="counterup" data-value="5">
+                                            <a href="#" class="font-green-sharp">{{itemDrink.DrinkCount}}</a>
+                                        </span>
+                                    </h3>
+                                    <small style="font-size:20px;">{{itemDrink.DrinkName}}</small>
+                                </div>
+                                <div class="icon">
+                                    <img v-bind:src="GetImagePath(itemDrink.DrinkName)" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                //console.log("ajax start...");
+                $.blockUI({ message: '<h3>Please wait... ' + '</h3>' });
+            }).ajaxStop($.unblockUI);
+            GetData();
+            setInterval("GetData();", 5000);
+        });
+
+        function GetData() {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetDrinkCount", "Drink")",
+                datatype: 'JSON',
+                cache: false,
+                success: function (data, status) {
+                    dataInfo.DrinkInfoList = data;
+                },
+                error: function (data) {
+                    //toastr.error(data.responseText);
+                }
+            });
+        }
+
+        var dataInfo = new Vue({
+            el: "#divInfo",
+            data: {
+                DrinkInfoList: []
+            },
+            methods: {
+                GetCurrentDate: function () {
+                    var currentDate = new Date();
+                    return moment(currentDate).format("DD-MM-YYYY");
+                },
+                GetImagePath: function (imageName) {
+                    return GetBaseUrl()+"../assets3/layouts/layout/img/" + imageName + ".png";
+                }
+            }
+        });
+    </script>
+}
+
+@section QuickAction
+{ }

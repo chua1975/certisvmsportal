@@ -1,0 +1,96 @@
+﻿@using CertisVMSPortal.Helpers
+@model IList<CertisVMS.Bll.ViewModels.FunctionMenuItem>
+@{
+    Layout = null;
+}
+
+@{
+    if (Model != null && Model.Count > 0)
+    {
+    <ul class="list-unstyled components">
+        @foreach (var menuItem in Model)
+        {
+            <li>
+                @if (menuItem.SubItems != null && menuItem.SubItems.Count > 0)
+                {
+                    <a href="#menu_@menuItem.UiName" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" id="nav_@menuItem.UiName">
+                        <i class="@menuItem.Icon"></i>@menuItem.DisplayName
+                    </a>
+                    <ul class="collapse list-unstyled" id="menu_@menuItem.UiName">
+
+                        @foreach (var subItem in menuItem.SubItems)
+                        {
+                            <li>
+                                <a href="@Url.Action(subItem.ActionName, subItem.ControllerName)" id="nav_@subItem.UiName" class="menuitem">
+                                    <i class="@subItem.Icon"></i>@subItem.DisplayName
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(menuItem.ControllerName) &&
+                        !string.IsNullOrWhiteSpace(menuItem.ActionName))
+                    {
+                        <a href="@Url.Action(menuItem.ActionName, menuItem.ControllerName)" id="nav_@menuItem.UiName" class="menuitem"><i class="@menuItem.Icon"></i>@menuItem.DisplayName</a>
+                    }
+                    else
+                    {
+                        // no need to show
+                    }
+                }
+            </li>
+        }
+
+        <li>
+            <a href="https://certisplusstaging.com/CertisPams" target="_blank" id="nav_Pams" class="menuitem"><i class="fa fa-users"></i>Pass Application</a>
+        </li>
+
+
+        <li>
+            <a href="~/VmsDebug/CompareFace" class="menuitem"><i class="fa fa-smile-o"></i>Compare &nbsp; Face</a>
+        </li>
+
+        <!--<li>
+        <a href="https://192.168.227/CertisPtw" id="nav_Ptw" class="menuitem"><i class="fa fa-users"></i>Permit To Work</a>
+    </li>-->
+
+    </ul>
+
+    }
+
+    <script>
+        $(document).ready(function () {
+            console.log("menu loaded");
+            var allMenuItems = $(".menuitem");
+            for (var i = 0; i < allMenuItems.length; i++) {
+                var mi = $(allMenuItems[i]);
+                highlightMenuItem(mi);
+            }
+
+        });
+        function highlightMenuItem(mi) {
+            var url = window.location.href + "/";
+            var href = window.location.origin + mi.attr("href") + "/";
+
+            if ((url.indexOf("VisitationCreate") >= 0 || url.indexOf("VisitationEdit") >= 0 || url.indexOf("VisitationDetails") >= 0)) {
+                if (mi[0].id == "nav_Visitation") {
+                    mi.addClass("active");
+                } else { return; }
+            }else if (href.length > 2 && url.indexOf(href) >= 0) {
+                if (href.indexOf("QrCodeRecord") >= 0 || href.indexOf("Approval") >= 0 || href.indexOf("SearchVisitorAndStaff") >= 0) {
+                    if (href != url) {
+                        return;
+                    }
+                }
+                mi.addClass("active");
+                var parent = mi.parent().parent().siblings("a");
+                $(parent).addClass("active");
+                $(parent).click();
+
+                console.log(mi);
+            }
+        }
+    </script>
+}

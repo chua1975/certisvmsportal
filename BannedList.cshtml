@@ -1,0 +1,135 @@
+﻿@using CertisVMSPortal.Models
+@model IList<CertisVMS.Model.Search.SearchStaffViewModel>
+@{
+    ViewBag.Title = "Staff List";
+    Layout = "~/Views/Shared/_Layout" + Session["Template"] + ".cshtml";
+}
+
+@section PageContent{
+
+    @Html.Partial("BreadCrumb", new BreadCrumb(new List<BreadCrumbItem>()
+    {
+        new BreadCrumbItem(){Link = Url.Action("BannedList","Staff"),Text = "Profile"},
+    }, new BreadCrumbItem(){ Link = "#", Text = "Banned Staff" } ))
+
+   <br />
+
+    <label style="margin-left:10px;display:none;" id="extraSearch">
+        <button id="btnClearState" class="btn btn_blue">Reset</button>
+    </label>
+
+    <table id="tblData" class="table table-hover dataTable no-footer">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Pass ID</th>
+                <th>ID Type</th>
+                <th>ID No.</th>
+                <th>ID Expiry</th>
+                @*<th>Mobile</th>*@
+                <th>Staff Type</th>
+                <th>Ban Reason</th>
+                <th>Status</th>
+                <th style="width: 10%">Action</th>
+            </tr>
+        </thead>
+    </table>
+
+
+}
+
+
+@section QuickAction
+    {
+    <ul>
+        <li>
+            <a href="@Url.Action("Index")" target="" class="active">
+                <span>Back to List</span>
+                <i class="icon-plus"></i>
+            </a>
+        </li>
+    </ul>
+}
+
+@section scripts {
+    <script src="~/Scripts/Components/datatable-ex.js"></script>
+    <script type="text/javascript">
+
+        function GetDetailLink(data, type, full, meta) {
+            if (type === 'display') {
+                return "<a href='" + GetBaseUrl() + "/Staff/Details/" + data + "'>" + data + "</a>";
+            } else return data;
+        }
+
+        $(document).ready(function () {
+
+            var columns = [
+                "StaffId",
+                "StaffName",
+                "StaffPassNo",
+                "IdType",
+                "StaffIdNumber",
+                {
+                    NAME: "IDExpiryDate",
+                    DATA: "IDExpiryDate",
+                    RENDER: function (data, type, full, meta) {
+                        if (data != null) {
+                            return moment(data).format("DD/MM/YYYY");
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+                //"StaffMobile",
+                "StaffType",
+                "BanReason",
+
+                "Status",
+                {
+                    NAME: "StaffId",
+                    DATA: "StaffId",
+                    RENDER: function (data, type, full, meta) {
+                        if (type === 'display') {
+                            var buttons = dtHelper.getMainButtonO();
+                            buttons += dtHelper.getDetailButton("/Staff/Details/", data);
+                            buttons += dtHelper.getEditButton("/Staff/Edit/", data);
+                            buttons += dtHelper.getMainButtonC();
+                            return buttons;
+                        } else return data;
+                    }
+                }
+            ];
+
+            var paras = {
+                TABLE: $('#tblData'),
+                URL: "/Staff/GetJsonDataForBanUsers",
+                COLUMNS: columns,
+                COLUMNDEFS: [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    {
+                        'targets': [0, 9],    //Don't sort for column 0 and Action
+                        'orderable': false
+                    }
+                ],
+                ORDER: [[0, "asc"]]
+                //    COLUMNDEFS: [{ orderable: false, targets: [3] }]
+            };
+
+            var table = dtHelper.createDataTable(paras);
+
+            $('div.dataTables_filter input').focus();
+
+            dtHelper.showExtraSearch();
+        });
+
+
+    </script>
+
+}
+
