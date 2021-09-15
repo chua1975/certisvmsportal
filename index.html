@@ -1,0 +1,1288 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="fonts.css" />
+
+    <link rel="stylesheet" href="inc/css/bootstrap.min.css" />
+    <link rel="stylesheet/less" type="text/css" href="inc/css/style.less" />
+    <script src="inc/js/less.js" type="text/javascript"></script>
+
+    <!-- Optional JavaScript -->
+    <script type="text/javascript" src="inc/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="inc/js/highcharts.js"></script>
+    <script type="text/javascript" src="inc/js/highcharts-more.js"></script>
+    <script type="text/javascript" src="inc/js/variable-pie.js"></script>
+
+    <!--<script type="text/javascript" src="inc/js/data.js"></script>-->
+    <!--<script type="text/javascript" src="data-client.js" ></script>-->
+    <!-- <script type="text/javascript" src="inc/js/common.js"></script> -->
+
+    <title>CERTIS GUEST | Management System</title>
+  </head>
+  <body>   
+
+    <header class="w-100 header">
+      <a href="#" class="logo"><img src="image/logo.png" alt="logo" /></a>
+    </header>
+    <!-- /.header -->
+
+    <main class="w-100 py-4 page-content">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <div class="cover-btns">
+              <a href="#" class="btn p-0 mr-4 mb-3 btn-blue text-primary">Monitoring</a>
+              <a href="#" class="btn p-0 mb-3 btn-white text-white">Surveillance</a>
+            </div>
+            <!-- /.cover-btns -->
+          </div>
+          <!-- /.col-sm-12 -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="cover-box cover-box-bottom mb-3">
+              <div class="cover-box-body body-part">
+                <div class="cover-box-header d-flex">
+                  <h3>Category</h3>
+                  <span class="text-white ml-auto">Today</span>
+                </div>
+                <!-- /.cover-box-header -->
+
+                <div class="cover-box-content">
+                  <div class="row">
+                    <div class="col-sm-12 mb-3">
+                      <ul class="list-unstyled list-category d-flex flex-wrap">
+                        <li><a href="#">Meeting</a></li>
+                        <li><a href="#">Contractor</a></li>
+                        <li><a href="#">Staff</a></li>
+                        <li><a href="#">Visitor</a></li>
+                        <li><a href="#">Delivery</a></li>
+                      </ul>
+                    </div>
+                    <!-- /.col-sm-12 -->
+                    <div class="col-sm-12">
+                      <div id="category-bars" class="cart-frame"></div>
+
+                      <script type="text/javascript">
+                        // category-bars
+                        Highcharts.chart('category-bars', {
+                            chart: {
+                              backgroundColor: 'transparent',
+                                type: 'bar', 
+                                height: 180,
+                                animation: Highcharts.svg,
+                                events: {
+                                  load: function () {
+                                    var series = this.series[0];
+                                      //dataClient.visitorTypeRegCounting().then(d=>{
+                                      var baseUrl = "http://localhost:62438/api/dashboard/";
+
+                                      //api:visitorTypeRegCounting
+                                      $.ajax({
+                                          type: "GET",
+                                          dataType: 'json',
+                                          url: baseUrl + "visitorTypeRegCounting",
+                                          success: function (d, status) {
+                                              series.setData(d);
+                                          }
+                                      });
+                                  }
+                              }
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            legend: {
+                                enabled: false
+                            },
+                            xAxis: {
+                                categories: ['Visitor', 'Contractor', 'Delivery', 'Staff', 'Meeting'],
+                                title: {
+                                    text: null
+                                },
+                                labels: {
+                                    style: {
+                                        color: '#00fcff'
+                                    }
+                                },
+                                gridLineWidth: 0
+                            },
+                             yAxis: {
+                                min: 0,
+                                title: {
+                                    text: null,
+                                    align: 'high'
+                                },
+                                labels: {
+                                  enabled: false
+                                },
+                                gridLineWidth: 0
+                            },
+                            plotOptions: {
+                                bar: {
+                                    dataLabels: {
+                                        enabled: true,
+                                        borderWidth: 0,
+                                        color: '#ffbf00'
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'Category',
+                                data: [2, 3, 4, 2, 1],
+                                color: {
+                                  linearGradient: {
+                                    x1: 0,
+                                    x2: 0,
+                                    y1: 0,
+                                    y2: 1
+                                  },
+                                  stops: [
+                                    [0, '#dd5d9c'],
+                                    [1, '#e9a643']
+                                  ]
+                                }
+                            }]
+                        });
+                      </script>
+                    </div>
+                    <!-- /.col-sm-12 -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.cover-box-content -->
+              </div>
+              <!-- /.cover-box-body -->
+              <div class="cover-box-foot">
+                <img src="image/bottom-left-curve.png" class="w-100 d-block" alt="curve" />
+              </div>
+              <!-- /.cover-box-foot -->
+            </div>
+            <!-- /.cover-box box-curve-bottom mb-3 -->
+
+            <div class="cover-box cover-box-top mb-3">
+              <div class="cover-box-head">
+                <img src="image/top-left-curve.png" class="w-100 d-block" alt="curve" />
+              </div>
+              <!-- /.cover-box-head -->
+              <div class="cover-box-body body-part">
+                <div class="cover-box-header d-flex">
+                  <h3>Total Access Record</h3>
+                  <span class="text-white ml-auto">Today</span>
+                </div>
+                <!-- /.cover-box-header -->
+
+                <div class="cover-box-content">
+                  <div class="row">
+                    <div class="col-xl-5 mb-xl-0 mb-3">
+                      <div id="total-access" class="chart-frame"></div>
+
+                      <script type="text/javascript">
+                        // total-access
+                        //dataClient.accessCountingByProfile().then(d=>{
+                          var baseUrl = "http://localhost:62438/api/dashboard/";
+                          $.ajax({
+                              type: "GET",
+                              dataType: 'json',
+                              url: baseUrl + "accessCountingByProfile",
+                              success: function (d, status) {
+
+                                  var countArr = d.map(function (x) { return { name: x.Name, y: x.Count[0] } });
+
+                                  Highcharts.chart('total-access', {
+                                      chart: {
+                                          backgroundColor: 'transparent',
+                                          polar: true,
+                                          height: 200,
+                                          events: {
+                                              load: function () {
+                                                  // set up the updating of the chart each second
+                                                  /* demo
+                                                  var series = this.series[0];
+                                                  setInterval(function () {
+                                                      var y = Math.random() * 2;
+                                                      series.setData([y*1,  y/8, y*2, y*7, y*3, y*6, y*4, y*5]);
+                                                  }, 1000);
+                                                  */
+                                              }
+                                          }
+                                      },
+                                      credits: {
+                                          enabled: false
+                                      },
+                                      legend: {
+                                          enabled: false
+                                      },
+
+                                      pane: {
+                                          startAngle: 0,
+                                          endAngle: 360
+                                      },
+                                      xAxis: {
+                                          tickInterval: 360,
+                                          min: 0,
+                                          max: 360,
+                                          labels: {
+                                              enabled: false
+                                          },
+                                          lineWidth: 0,
+                                          // categories:names
+                                      },
+
+                                      yAxis: {
+                                          min: 0,
+                                          gridLineWidth: 0,
+                                          lineWidth: 0,
+                                          labels: {
+                                              enabled: false
+                                          },
+                                      },
+                                      plotOptions: {
+                                          series: {
+                                              pointStart: 0,
+                                              pointInterval: 45,
+                                              borderRadius: 5,
+                                              borderWidth: 0
+                                          }
+                                      },
+                                      series: [{
+                                          type: 'area',
+                                          name: 'Record',
+                                          data: countArr,
+                                          color: {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, '#ec9e4b'],
+                                                  [1, '#ff6e75']
+                                              ]
+                                          }
+                                      }]
+                                  });
+                              }
+                        });
+                        
+                      </script>
+                    </div>
+                    <!-- /.col-xl-6 -->
+                    <div class="col-xl-7">
+                      <div id="record-bars" class="cart-frame"></div>
+
+                      <script type="text/javascript">
+                      //dataClient.accessCountingByDevice().then(d=>{
+                          var baseUrl = "http://localhost:62438/api/dashboard/";
+                          $.ajax({
+                              type: "GET",
+                              dataType: 'json',
+                              url: baseUrl + "accessCountingByDevice",
+                              success: function (d, status) {
+
+                                  var label = d.map(x => x.Name);
+                                  var val = d.map(x => x.Count);
+                                  // record-bars
+                                  Highcharts.chart('record-bars', {
+                                      chart: {
+                                          backgroundColor: 'transparent',
+                                          type: 'bar',
+                                          height: 180,
+                                          animation: Highcharts.svg,
+                                          events: {
+                                              load: function () {
+
+                                                  // set up the updating of the chart each second
+                                                  var series = this.series[0];
+                                                  /*
+                                                  setInterval(function () {
+                                                      var y = Math.random() * 1000000;
+                                                          y = y.toFixed(0);
+                                                      series.setData([y*1,  y*2, y*1, y*2]);
+                                                  }, 1000);*/
+                                              }
+                                          }
+                                      },
+                                      credits: {
+                                          enabled: false
+                                      },
+                                      legend: {
+                                          enabled: false
+                                      },
+                                      xAxis: {
+                                          categories: label,
+                                          title: {
+                                              text: null
+                                          },
+                                          labels: {
+                                              style: {
+                                                  color: '#00fcff'
+                                              }
+                                          },
+                                          gridLineWidth: 0
+                                      },
+                                      yAxis: {
+                                          min: 0,
+                                          title: {
+                                              text: null,
+                                              align: 'high'
+                                          },
+                                          labels: {
+                                              enabled: false
+                                          },
+                                          gridLineWidth: 0
+                                      },
+                                      plotOptions: {
+                                          bar: {
+                                              dataLabels: {
+                                                  enabled: true,
+                                                  borderWidth: 0,
+                                                  color: '#ffbf00'
+                                              }
+                                          }
+                                      },
+                                      series: [{
+                                          name: 'Category',
+                                          data: val,
+                                          color: {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, '#dd5d9c'],
+                                                  [1, '#e9a643']
+                                              ]
+                                          }
+
+                                      }]
+                                  });
+                              }
+                      });
+
+                        
+                      </script>
+                    </div>
+                    <!-- /.col-xl-6 -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.cover-box-content -->
+              </div>
+              <!-- /.cover-box-body -->
+            </div>
+            <!-- /.cover-box box-curve-bottom mb-3 -->
+
+            <div class="cover-box cover-box-bottom mb-3">
+              <div class="cover-box-body body-part">
+                <div class="cover-box-header d-flex">
+                  <h3>Staff Attendance</h3>
+                  <span class="text-white ml-auto">Today</span>
+                </div>
+                <!-- /.cover-box-header -->
+
+                <div class="cover-box-content">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col-sm-6">
+                      <div id="staff-attendance" class="chart-frame"></div>
+
+                      <script type="text/javascript">
+                        // staff-attendance
+                        //dataClient.attendanceByHour().then(d=>{
+                          var baseUrl = "http://localhost:62438/api/dashboard/";
+                          $.ajax({
+                              type: "GET",
+                              dataType: 'json',
+                              url: baseUrl + "attendanceByHour",
+                              success: function (d, status) {
+
+                                  var slot = d.TimeSlot;
+                                  var staff = d.Staff;
+                                  var contractor = d.Contractor;
+                                  //console.log(slot);
+                                  Highcharts.chart('staff-attendance', {
+                                      chart: {
+                                          backgroundColor: 'transparent',
+                                          type: 'line',
+                                          height: 200,
+                                          events: {
+                                              load: function () {
+                                                  // set up the updating of the chart each second
+                                                  var series0 = this.series[0];
+                                                  var series1 = this.series[1];
+                                                  /*
+                                                  setInterval(function () {
+                                                      var x = (new Date()).getTime(), // current time
+                                                      y0 = Math.random();
+                                                      y1 = Math.random() * 2 ;
+                                                      series0.addPoint([x, y0], true, true);
+                                                      series1.addPoint([x, y1], true, true);
+                                                  }, 1000);*/
+                                              }
+                                          }
+                                      },
+
+                                      credits: {
+                                          enabled: false
+                                      },
+                                      legend: {
+                                          enabled: false
+                                      },
+
+                                      xAxis: {
+                                          labels: {
+                                              style: {
+                                                  color: '#ffbf00'
+                                              }
+                                          },
+                                          lineColor: '#0f5b6f',
+                                          lineWidth: 1,
+                                          crosshair: false,
+                                          title: {
+                                              text: ''
+                                          },
+                                          tickPixelInterval: 10,
+                                          gridLineWidth: 1,
+                                          gridLineColor: '#0f5b6f',
+                                          categories: slot
+                                      },
+                                      yAxis: {
+                                          min: 0,
+                                          title: {
+                                              text: null
+                                          },
+                                          labels: {
+                                              style: {
+                                                  color: '#ffbf00'
+                                              }
+                                          },
+                                          gridLineWidth: 1,
+                                          gridLineColor: '#0f5b6f',
+                                          plotLines: [{
+                                              value: 0,
+                                              width: 1,
+                                              color: '#dd5d9b'
+                                          }]
+                                      },
+                                      colors: ['#dd5d9b', '#787df1'],
+                                      series: [{
+                                          name: 'Staff',
+                                          data: staff
+                                          /*
+                                          data: (function () {
+                                          // generate an array of random data
+                                          var data = [],time = (new Date()).getTime(),i;
+                                          
+                                          for (i = -19; i <= 0; i += 1) {
+                                            data.push({
+                                                x: time + i * 1000,
+                                                y: Math.random()
+                                            });
+                                          }
+                                          return data;
+                                      }()) 
+                                      */
+                                      }, {
+                                          name: 'Contractor',
+                                          data: contractor
+                                          /*
+                                          data: (function () {
+                                          // generate an array of random data
+                                          var data = [],time = (new Date()).getTime(),i;
+                                          
+                                          for (i = -19; i <= 0; i += 1) {
+                                            data.push({
+                                                x: time + i * 1000,
+                                                y: Math.random()
+                                            });
+                                          }
+                                          return data;
+                                      }()) */
+
+
+                                      }]
+                                  });
+                              }
+                        });
+                        
+                      </script>                      
+                    </div>
+                    <!-- /.col-sm-6 -->
+                    <div class="col-sm-6">
+                      <div class="staff-circles text-center">
+                        <div class="staff-circle circle-onTime">
+                          <img src="image/circle-onTime.png" alt="circle" />
+                          <div class="circle-text">
+                            <strong id="lbl_att_on_time"></strong>
+                            <span>On Time</span>
+                          </div>
+                          <!-- /.circle-text -->
+                        </div>
+                        <!-- /.staff-circle circle-onTime -->
+                        <div class="staff-circle circle-late">
+                          <img src="image/circle-late.png" alt="circle" />
+                          <div class="circle-text">
+                            <strong id="lbl_att_late"></strong>
+                            <span>Late</span>
+                          </div>
+                          <!-- /.circle-text -->
+                        </div>
+                        <script type="text/javascript">
+                          //dataClient.staffAttendanceTotal().then(d=>{
+                            var baseUrl = "http://localhost:62438/api/dashboard/";
+                            $.ajax({
+                                type: "GET",
+                                dataType: 'JSON',
+                                url: baseUrl + "staffAttendanceTotal",
+                                success: function (d, status) {
+                                    $("#lbl_att_on_time").html(d[0]);
+                                    $("#lbl_att_late").html(d[1]);
+                                }
+                          });
+                        </script>
+                        <!-- /.staff-circle circle-late -->
+                      </div>
+                      <!-- /.staff-circles -->
+                    </div>
+                    <!-- /.col-sm-6 -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.cover-box-content -->
+              </div>
+              <!-- /.cover-box-body -->
+              <div class="cover-box-foot">
+                <img src="image/bottom-left-curve.png" class="w-100 d-block" alt="curve" />
+              </div>
+              <!-- /.cover-box-foot -->
+            </div>
+            <!-- /.cover-box box-curve-bottom mb-3 -->
+          </div>
+          <!-- /.col-lg-4 -->
+          <div class="col-lg-4">
+            
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <div class="cover-box cover-box-bottom mb-3">
+                  <div class="cover-box-body body-part">
+                    <div class="cover-box-header d-flex">
+                      <h3>On Prem</h3>
+                    </div>
+                    <!-- /.cover-box-header -->
+
+                    <div class="cover-box-content">
+                      <div class="form-row text-center align-items-center">
+                        <div class="col-6">
+                          <div class="box-frame">
+                            <img src="image/number-frame.png" class="img-fluid" alt="frame" />
+                            <div class="box-value">
+                              <strong id="lbl_onPrem_staff"></strong>
+                              <span>Staff</span>
+                            </div>
+                          </div>
+                          <!-- /.box-frame -->
+                        </div>
+                        <!-- /.col-6 -->
+                        <div class="col-6">
+                          <div class="box-frame">
+                            <img src="image/number-frame.png" class="img-fluid" alt="frame" />
+                            <div class="box-value">
+                              <strong id="lbl_onPrem_visitor"></strong>
+                              <span>Visitor</span>
+                            </div>
+                          </div>
+                          <!-- /.box-frame -->
+                        </div>
+                        <!-- /.col-6 -->
+                        <div class="col-6">
+                          <div class="box-frame">
+                            <img src="image/number-frame.png" class="img-fluid" alt="frame" />
+                            <div class="box-value">
+                              <strong id="lbl_overstay_staff"></strong>
+                              <span>Staff Overstay</span>
+                            </div>
+                          </div>
+                          <!-- /.box-frame -->
+                        </div>
+                        <!-- /.col-6 -->
+                        <div class="col-6">
+                          <div class="box-frame">
+                            <img src="image/number-frame.png" class="img-fluid" alt="frame" />
+                            <div class="box-value">
+                              <strong id="lbl_overstay_visitor"></strong>
+                              <span>Visitor Overstay</span>
+                            </div>
+                          </div>
+                          <!-- /.box-frame -->
+                        </div>
+                        <!-- /.col-6 -->
+                      </div>
+                      <!-- /.row -->
+                    </div>
+                    <!-- /.cover-box-content -->
+                  </div>
+                  <!-- /.cover-box-body -->
+                  <div class="cover-box-foot">
+                    <img src="image/bottom-left-smallcurve.png" class="w-100 d-block" alt="curve" />
+                  </div>
+                  <!-- /.cover-box-foot -->
+                </div>
+                <!-- /.cover-box box-curve-top mb-3 -->
+              </div>
+              <!-- /.col-sm-6 -->
+              <div class="col-sm-6">
+                <div class="cover-box cover-box-bottom mb-3">
+                  <div class="cover-box-body body-part">
+                    <div class="cover-box-header d-flex">
+                      <h3>Activity</h3>
+                      <span class="text-white ml-auto">Today</span>
+                    </div>
+                    <!-- /.cover-box-header -->
+
+                    <div class="cover-box-content cover-box-activity" id="div_today_activity">
+                       <script type="text/javascript">
+                           $(document).ready(function () {
+                               var baseUrl = "http://localhost:62438/api/dashboard/";
+
+                               $.ajax({
+                                   type: "GET",
+                                   dataType: 'JSON',
+                                   url: baseUrl + "theFourNumbers",
+                                   success: function (d, status) {
+                                       console.log(d);
+                                       //data = JSON.parse(d);
+                                       $("#lbl_onPrem_staff").html(d.OnPrem[0]);
+                                       $("#lbl_onPrem_visitor").html(d.OnPrem[1]);
+                                       $("#lbl_overstay_staff").html(d.Overstay[0]);
+                                       $("#lbl_overstay_visitor").html(d.Overstay[1]);
+                                   },
+                                   error: function (xhr, error, ex) {
+                                       console.log(error);
+                                       console.log(ex);
+                                       console.log('Error when get theFourNumbers');
+                                   },
+                               });
+
+                        //dataClient.todayActivity().then(d=>{
+                               $.ajax({
+                                   type: "GET",
+                                   dataType: 'JSON',
+                                   url: baseUrl + "todayActivity",
+                                   success: function (d, status) {
+
+                                       var html = "";
+                                       for (var i = 0; i < d.length; i++) {
+                                           var div = `<div class="activity">
+                                        <p>${d[i].Message}</p>
+                                        <div class="text-right mt-2">
+                                          <span>${d[i].Time}</span>
+                                        </div>
+                                      </div>
+                                      <div class="divider clearfix"></div>`;
+                                           html += div;
+                                       }
+                                       $("#div_today_activity").html(html);
+                                   }
+                      });
+                       
+                   });
+                      </script> 
+                  
+                    <!-- /.cover-box-content -->
+                  </div>
+                  </div>
+                  <!-- /.cover-box-body -->
+                  <div class="cover-box-foot">
+                    <img src="image/bottom-left-smallcurve.png" class="w-100 d-block" alt="curve" />
+                  </div>
+                  <!-- /.cover-box-foot -->
+                </div>
+                <!-- /.cover-box box-curve-top mb-3 -->
+              </div>
+              <!-- /.col-sm-6 -->
+            </div>
+            <!-- /.row -->
+            
+            <div class="cover-box cover-box-top mb-3">
+              <div class="cover-box-head">
+                <img src="image/top-left-curve.png" class="w-100 d-block" alt="curve" />
+              </div>
+              <!-- /.cover-box-head -->
+              <div class="cover-box-body body-part">
+                <div class="cover-box-header d-flex">
+                  <h3>FR/QR Code Total Scan</h3>
+                  <span class="text-white ml-auto">Today</span>
+                </div>
+                <!-- /.cover-box-header -->
+
+                <div class="cover-box-content">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col-sm-6">
+                      <div id="code-total" class="chart-frame"></div>
+
+                      <script type="text/javascript">
+                      //dataClient.staffVisitorAccessByHour().then(d=>{
+                          var baseUrl = "http://localhost:62438/api/dashboard/";
+                          $.ajax({
+                              type: "GET",
+                              dataType: 'json',
+                              url: baseUrl + "staffVisitorAccessByHour",
+                              success: function (d, status) {
+
+                                  var slot = d.TimeSlot;
+                                  var visitor = d.Visitor;
+                                  var staff = d.Staff;
+                                  // code total
+                                  Highcharts.chart('code-total', {
+                                      chart: {
+                                          backgroundColor: 'transparent',
+                                          type: 'column',
+                                          animation: Highcharts.svg,
+                                          events: {
+                                              load: function () {
+                                                  // set up the updating of the chart each second
+                                                  var series0 = this.series[0];
+                                                  var series1 = this.series[1];
+
+                                                  /*demo
+                                                  setInterval(function () {
+                                                      var y0 = Math.random() * 1000;
+                                                      var y1 = Math.random() * 1500;
+                                                      series0.setData([y0*3,  y0/2, y0/8, y0*7, y0/2, y0*4, y0*5]);
+                                                      series1.setData([y1*9,  y1*3, y1/2, y1*3, y1*9, y1/2, y1*6]);
+                                                  }, 1000);
+                                                  */
+                                              }
+                                          }
+                                      },
+                                      credits: {
+                                          enabled: false
+                                      },
+                                      legend: {
+                                          itemStyle: {
+                                              color: '#dd5d9b'
+                                          }
+                                      },
+                                      xAxis: {
+                                          categories: slot,
+                                          labels: {
+                                              style: {
+                                                  color: '#ffbf00'
+                                              }
+                                          },
+                                          lineColor: '#0f5b6f',
+                                          lineWidth: 1,
+                                          crosshair: false,
+                                          title: {
+                                              text: null
+                                          }
+                                      },
+                                      yAxis: {
+                                          min: 0,
+                                          title: {
+                                              text: null
+                                          },
+                                          labels: {
+                                              style: {
+                                                  color: '#ffbf00'
+                                              }
+                                          },
+                                          gridLineWidth: 1,
+                                          gridLineColor: '#0f5b6f',
+                                      },
+                                      plotOptions: {
+                                          column: {
+                                              pointPadding: 0.2,
+                                              borderWidth: 0
+                                          }
+                                      },
+                                      plotOptions: {
+                                          series: {
+                                              borderRadius: 5,
+                                              borderWidth: 0
+                                          }
+                                      },
+                                      colors: ['#dd5d9b', '#787df1'],
+                                      series: [{
+                                          name: 'Staff',
+                                          data: staff,
+                                          color: {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, '#ec9e4b'],
+                                                  [1, '#ff6e75']
+                                              ]
+                                          }
+
+                                      }, {
+                                          name: 'Visitor',
+                                          data: visitor,
+                                          color: {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, '#899ff9'],
+                                                  [1, '#787df1']
+                                              ]
+                                          }
+                                      }]
+                                  });
+                              }
+                      });
+                        
+                      </script>
+                    </div>
+                    <!-- /.col-sm-6 -->
+                    <div class="col-sm-6">
+                        <div class="total text-center">
+                            <img src="image/total-frame.png" class="img-fluid" alt="frame" />
+                            <div class="total-value">
+                                <span>Total</span>
+                                <strong id="lbl_total_scan"></strong>
+                            </div>
+                            <!-- /.total-value -->
+                            <script type="text/javascript">
+                                var baseUrl = "http://localhost:62438/api/dashboard/";
+                                $.ajax({
+                                    type: "GET",
+                                    dataType: 'JSON',
+                                    url: baseUrl + "accessCountingToday",
+                                    success: function (d, status) {
+                                        $("#lbl_total_scan").html(d.today);
+                                    }
+                                });
+                            </script>
+                        </div>
+                      <!-- /.total -->
+                    </div>
+                    <!-- /.col-sm-6 -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.cover-box-content -->
+              </div>
+              <!-- /.cover-box-body -->
+            </div>
+            <!-- /.cover-box box-curve-top mb-3 -->
+          </div>
+          <!-- /.col-lg-4 -->
+          <div class="col-lg-4">
+            <div class="cover-box cover-box-bottom mb-3">
+              <div class="cover-box-body body-part">
+                <div class="cover-box-header d-flex">
+                  <h3>Tenant Registration</h3>
+                  <span class="text-white ml-auto">Today</span>
+                </div>
+                <!-- /.cover-box-header -->
+
+                <div class="cover-box-content">
+                  <div class="row align-items-center">
+                    <div class="col-sm-12">
+                      <div id="tenant-pie" data-name="['xxxz', 'xzx', '554', '555']" class="cart-frame pie-chart"></div>
+
+                      <script type="text/javascript">
+
+                        //dataClient.tenantRegCounting().then(d=>{
+                          var baseUrl = "http://localhost:62438/api/dashboard/";
+                          $.ajax({
+                              type: "GET",
+                              dataType: 'json',
+                              url: baseUrl + "tenantRegCounting",
+                              success: function (d, status) {
+
+                                  var displayData = d.map(function (x) { x.y = x.value; return x; });
+                                  //console.log(displayData);
+                                  // total-registeration
+                                  Highcharts.chart('tenant-pie', {
+                                      chart: {
+                                          backgroundColor: 'transparent',
+                                          type: 'pie',
+                                          height: 280,
+                                          plotBackgroundColor: null,
+                                          plotBorderWidth: null,
+                                          plotShadow: false,
+                                          animation: {
+                                              duration: 2000
+                                          },
+                                          events: {
+                                              load: function (event) {
+                                                  /* demo
+                                                  var series = this.series[0];
+              
+                                                  setInterval(function () {
+                                                    var x = (new Date()).getTime(), // current time
+                                                    y = Math.random() * 10000;
+                                                    series.addPoint([0, y], true, true);
+                                                  }, 5000);
+                                                    */
+                                              }
+                                          }
+                                      },
+                                      credits: {
+                                          enabled: false
+                                      },
+                                      legend: {
+                                          enabled: true
+                                      },
+                                      plotOptions: {
+                                          pie: {
+                                              allowPointSelect: true,
+                                              cursor: 'pointer',
+                                              dataLabels: {
+                                                  enabled: true,
+                                                  format: '{point.y:,.0f}'
+                                              }
+                                          },
+                                          series: {
+                                              borderWidth: 0
+                                          }
+                                      },
+                                      colors: [
+                                          {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, '#6895ec'],
+                                                  [1, '#7170eb']
+                                              ]
+                                          },
+                                          {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, '#c666e3'],
+                                                  [1, '#8258e0']
+                                              ]
+                                          },
+                                          {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, '#a25ee1'],
+                                                  [1, '#e0538c']
+                                              ]
+                                          },
+                                          {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, '#ee7276'],
+                                                  [1, '#ff9959']
+                                              ]
+                                          }
+                                      ],
+                                      series: [{
+                                          name: 'Total Registration',
+                                          data: displayData
+                                      }]
+                                  });
+                              }
+                        });
+                        
+                       
+                      </script>
+                    </div>
+                    <!-- /.col-sm-12 -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.cover-box-content -->
+              </div>
+              <!-- /.cover-box-body -->
+              <div class="cover-box-foot">
+                <img src="image/bottom-left-curve.png" class="w-100 d-block" alt="curve" />
+              </div>
+              <!-- /.cover-box-foot -->
+            </div>
+            <!-- /.cover-box box-curve-bottom mb-3 -->
+
+            <div class="cover-box cover-box-top mb-3">
+              <div class="cover-box-head">
+                <img src="image/top-left-curve.png" class="w-100 d-block" alt="curve" />
+              </div>
+              <!-- /.cover-box-head -->
+              <div class="cover-box-body body-part">
+                <div class="cover-box-header d-flex">
+                  <h3># On Prem/Hour</h3>
+                  <span class="text-white ml-auto">Today</span>
+                </div>
+                <!-- /.cover-box-header -->
+
+                <div class="cover-box-content">
+                  <div class="row align-items-center">
+                    <div class="col-sm-12">
+                      <div id="prem-hour" class="cart-frame"></div>
+
+                      <script type="text/javascript">
+                        // on prem/hour
+                        //dataClient.onPremByHour().then(d=>{
+                          var baseUrl = "http://localhost:62438/api/dashboard/";
+                          $.ajax({
+                              type: "GET",
+                              dataType: 'json',
+                              url: baseUrl + "onPremByHour",
+                              success: function (d, status) {
+
+                                  var slot = d.TimeSlot;
+                                  var total = d.Total;
+
+                                  Highcharts.chart('prem-hour', {
+                                      chart: {
+                                          backgroundColor: 'transparent',
+                                          type: 'area',
+                                          height: 200,
+                                          events: {
+                                              load: function () {
+                                                  var series = this.series[0];
+                                                  /*
+                                                  setInterval(function () {
+                                                      var x = (new Date()).getTime(), // current time
+                                                          y = Math.random();
+                                                      series.addPoint([x, y], true, true);
+                                                  }, 1000);
+                                                  */
+                                              }
+                                          }
+                                      },
+                                      credits: {
+                                          enabled: false
+                                      },
+                                      legend: {
+                                          enabled: false
+                                      },
+                                      xAxis: {
+                                          categories: slot,
+                                          labels: {
+                                              //enabled: false,
+                                              style: {
+                                                  color: '#ffbf00'
+                                              }
+                                          },
+                                          lineColor: '#0f5b6f',
+                                          lineWidth: 1,
+                                          crosshair: false,
+                                          title: {
+                                              text: null
+                                          },
+                                          gridLineWidth: 1,
+                                          gridLineColor: '#0f5b6f',
+                                      },
+                                      yAxis: {
+                                          min: 0,
+                                          title: {
+                                              text: null
+                                          },
+                                          labels: {
+                                              style: {
+                                                  color: '#ffbf00'
+                                              }
+                                          },
+                                          gridLineWidth: 1,
+                                          gridLineColor: '#0f5b6f',
+                                      },
+                                      plotOptions: {
+                                          area: {
+                                              fillOpacity: 0.5
+                                          }
+                                      },
+                                      series: [{
+                                          name: 'On Prem/Hour',
+                                          data: total,
+                                          color: {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, 'rgba(116, 55, 76, 0.73)'],
+                                                  [1, 'rgba(0,0,0,0.8)']
+                                              ]
+                                          }
+                                      }]
+                                  });
+                              }
+                        });
+                        
+                      </script>
+                    </div>
+                    <!-- /.col-sm-12 -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.cover-box-content -->
+              </div>
+              <!-- /.cover-box-body -->
+            </div>
+            <!-- /.cover-box box-curve-top mb-3 -->
+
+            <div class="cover-box cover-box-bottom mb-3">
+              <div class="cover-box-body body-part">
+                <div class="cover-box-header d-flex">
+                  <h3>Total Registration</h3>
+                  <span class="text-white ml-auto">This Year</span>
+                </div>
+                <!-- /.cover-box-header -->
+
+                <div class="cover-box-content">
+                  <div class="row align-items-center">
+                    <div class="col-sm-12">
+                      <div id="total-register" class="cart-frame pie-chart"></div>
+
+                      <script type="text/javascript">
+                      //dataClient.staffVisitorRegCounting().then(d=>{
+                          var baseUrl = "http://localhost:62438/api/dashboard/";
+                          $.ajax({
+                              type: "GET",
+                              dataType: 'json',
+                              url: baseUrl + "staffVisitorRegCounting",
+                              success: function (d, status) {
+
+                                  var displayData = d.map(function (x) { return [x.name, x.value]; });
+                                  // total-registeration
+                                  Highcharts.chart('total-register', {
+                                      chart: {
+                                          backgroundColor: 'transparent',
+                                          type: 'pie',
+                                          height: 220,
+                                          plotBackgroundColor: null,
+                                          plotBorderWidth: null,
+                                          plotShadow: false,
+                                          animation: {
+                                              duration: 2000
+                                          },
+                                          events: {
+                                              load: function (event) {
+                                                  /* demo
+              
+                                                  var series = this.series[0];
+              
+                                                  setInterval(function () {
+                                                    var x = (new Date()).getTime(), // current time
+                                                    y = Math.random() * 1000;
+                                                    series.addPoint([x, y], true, true);
+                                                  }, 5000);
+                                                    */
+                                              }
+                                          }
+                                      },
+                                      credits: {
+                                          enabled: false
+                                      },
+                                      legend: {
+                                          enabled: true
+                                      },
+                                      plotOptions: {
+                                          pie: {
+                                              allowPointSelect: true,
+                                              cursor: 'pointer',
+                                              dataLabels: {
+                                                  enabled: true,
+                                                  format: '{point.y:,.0f}'
+                                              }
+                                          },
+                                          series: {
+                                              borderWidth: 0
+                                          }
+                                      },
+                                      colors: [
+                                          {
+                                              linearGradient: {
+                                                  x1: 0,
+                                                  x2: 0,
+                                                  y1: 0,
+                                                  y2: 1
+                                              },
+                                              stops: [
+                                                  [0, '#dd5c9d'],
+                                                  [1, '#e9a544']
+                                              ]
+                                          },
+                                          {
+                                              radialGradient: {
+                                                  cx: 0.5,
+                                                  cy: 0.3,
+                                                  r: 0.7
+                                              },
+                                              stops: [
+                                                  [0, '#7980f1'],
+                                                  [1, '#889df8']
+                                              ]
+                                          }
+                                      ],
+                                      series: [{
+                                          zMin: 60,
+                                          name: 'Total Registration',
+                                          data: displayData
+                                      }]
+                                  });
+                              }
+                      });
+                        
+                      </script>
+                    </div>
+                    <!-- /.col-sm-12 -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.cover-box-content -->
+              </div>
+              <!-- /.cover-box-body -->
+              <div class="cover-box-foot">
+                <img src="image/bottom-left-curve.png" class="w-100 d-block" alt="curve" />
+              </div>
+              <!-- /.cover-box-foot -->
+            </div>
+            <!-- /.cover-box box-curve-bottom mb-3 -->
+          </div>
+          <!-- /.col-lg-4 -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </main>
+    <!-- /.page-content -->
+    
+    <footer class="w-100 footer">
+      <img src="image/footer-bar.png" class="w-100 d-block" alt="">
+    </footer>
+    <!-- /.footer -->
+
+    
+  </body>
+</html>

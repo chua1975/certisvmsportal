@@ -1,0 +1,138 @@
+﻿@model IList<CertisVMS.Bll.ViewModels.MovementPairViewModel>
+@{
+                /**/
+
+                /**/
+
+                ViewBag.Title = "Movement Records";
+                Layout = "~/Views/Shared/_Layout" + Session["Template"] + ".cshtml";
+                bool showFirst = true;
+}
+
+@section PageContent{
+
+    <div class="page-bar">
+        <ul class="page-breadcrumb breadcrumb">
+            <li>
+                <a href="#">Profile</a>
+                <span class="font_orange">|</span>
+            </li>
+            <li>
+                <span class="font_orange headerTitle">Movement History Records</span>
+            </li>
+        </ul>
+    </div>
+
+
+    <table id="tblData" class="table table-hover dataTable no-footer">
+        <thead>
+            <tr>
+                <th> Pass No.</th>
+                <th> Entry </th>
+                <th> Exit </th>
+                <th> Exception </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model != null && Model.Count > 0)
+                {
+                    foreach (var pair in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="BoardingPassNo">
+                                    @if (!string.IsNullOrEmpty(pair.EntryPassNo))
+                                    {
+                                        <p style="margin:0;"><text>Entry, @pair.EntryPassNo</text></p>
+                                    }
+                                    @if (!string.IsNullOrEmpty(pair.ExitPassNo))
+                                    {
+                                        <p style="margin:0;"><text>Exit, @pair.ExitPassNo</text></p>
+                                    }
+                                </span>
+                            </td>
+                            <td><span class="BoardingPassNo">@pair.EntryDateTime</span></td>
+                            <td>
+                                @if (pair.ExitDateTime == "" && showFirst)
+                                {
+                                    <input value="Patch Exit" type="button" onclick="UpdatePair(this,@pair.ID)" class="btn btn_blue" />
+                                    showFirst = false;
+                                }
+                                else
+                                {
+                                    @pair.ExitDateTime
+
+                                }
+                            </td>
+                            <td>
+                                <span class="BoardingPassNo">
+                                    @if (!string.IsNullOrEmpty(pair.EntryByPassReason))
+                                    {
+                                        <p style="margin:0;"><text>Entry, @pair.EntryByPassReason</text></p>
+                                    }
+                                    @if (!string.IsNullOrEmpty(pair.ExitByPassReason))
+                                    {
+                                        <p style="margin:0;"><text>Exit, @pair.ExitByPassReason</text></p>
+                                    }
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" style="text-align:center">
+                            No matching records found
+                        </td>
+                    </tr>
+                }
+
+            }
+
+        </tbody>
+    </table>
+
+
+}
+
+
+@section QuickAction
+    {
+    <ul>
+        <li>
+            <a href="@Url.Action("Index","Visitation")" target="" class="active">
+                <span>List</span>
+                <i class="icon-list"></i>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("VisitationEdit")/@ViewBag.RegisteredID" target="" class="active">
+                <span>Back Edit</span>
+                <i class=" glyphicon glyphicon-edit"></i>
+            </a>
+        </li>
+    </ul>
+}
+
+@section scripts {
+    <script>
+    function UpdatePair(obj,id){
+    $.ajax({
+        type: "GET",
+        url: "@Url.Action("UpdateMovementPairs")/" + id,
+        success: function (data) {
+        //$("#workingHours").text(data.WorkingHours);
+            if(data.state){
+                $(obj).parent().html(data.message);
+                showMessage('success', 'Success', 'Operation successful.');
+            }else{
+                showMessage('error', 'Failure', 'An error occured on server.');
+            }
+
+        }
+    });
+    } </script>
+}
+

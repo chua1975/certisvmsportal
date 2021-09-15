@@ -1,0 +1,58 @@
+﻿@model IList<CertisVMS.Bll.ViewModels.MovementPairViewModel>
+@{
+    bool showFirst = true;
+}
+
+
+@{
+    if (Model != null && Model.Count > 0)
+    {
+        foreach (var pair in Model)
+        {
+            <tr>
+                <td>
+                    @if (pair.Direction == "I")
+                    {
+                        <p style="margin:0;"><text>Entry, @pair.DeviceSN (@pair.DeviceType)</text></p>
+                    }
+                    @if (pair.Direction == "O")
+                    {
+                        <p style="margin:0;"><text>Exit , @pair.DeviceSN (@pair.DeviceType)</text></p>
+                    }
+                </td>
+                <td><span class="BoardingPassNo">@pair.EntryDateTime</span></td>
+                <td>
+                    @if (pair.VisitStatus == "I" && showFirst)
+                    {
+                        <input value="Patch Exit" type="button" onclick="UpdatePair(this,@pair.ID)" class="btn btn_blue" />
+                        showFirst = false;
+                    }
+                    else
+                    {
+                        @pair.ExitDateTime
+
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(pair.EntryByPassReason))
+                    {
+                        <p style="margin:0;"><text>Entry, @pair.EntryByPassReason</text></p>
+                    }
+                    @if (!string.IsNullOrEmpty(pair.ExitByPassReason))
+                    {
+                        <p style="margin:0;"><text>Exit, @pair.ExitByPassReason</text></p>
+                    }
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="4" style="text-align:center">
+                No matching records found
+            </td>
+        </tr>
+    }
+
+}

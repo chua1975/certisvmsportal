@@ -1,0 +1,455 @@
+﻿@using CertisVMSPortal.Models
+@using System.Configuration
+@using CertisVMS.Model.Search
+@using CertisVMS.Bll.Config
+@using CertisVMS.Model.Config
+
+@model CertisVMS.Bll.ViewModels.AccessViewModel
+@{
+    ViewBag.Title = "Check In";
+    Layout = "~/Views/Shared/_Layout" + Session["Template"] + ".cshtml";
+
+    var regFingerUrl = VMSConfig.Get<string>(VMSKey.FingerPrintApi_Reg);
+    var compareFingerUrl = VMSConfig.Get<string>(VMSKey.FingerPrintApi_Compare);
+    var needChangePass = VMSConfig.Get<bool>(VMSKey.AccessControl_ChangePass);
+}
+
+@section PageContent
+{
+    <style>
+        small {
+            font-size: 13px !important;
+        }
+
+        .flexbox {
+            padding-top: 10px;
+        }
+
+        .quick-nav {
+            display: none;
+        }
+
+        .alert {
+            opacity: 1 !important;
+        }
+
+        .alertbox{
+            display: none !important;
+        }
+    </style>
+    <link href="../assets3/global/css/components.min.css" id="style_components" type="text/css">
+
+    @Html.Partial("BreadCrumb", new BreadCrumb(new List<BreadCrumbItem>()
+    {
+        new BreadCrumbItem(){Link = Url.Action("Index","Access"),Text = "Access Control"},
+    }, new BreadCrumbItem() { Link = "#", Text = "Check In" }))
+
+    <h3 class="form-section">Visit Movements on @Model.CurrentDateTime</h3>
+    <!-- Date should be current date-->
+    @*<br /><br />*@
+
+    <!-- Info section-->
+    <!--/row-->
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="dashboard-stat2 dashboard box_blue">
+                <div class="display ">
+                    <div class="number pull-left">
+                        <h3 class="font-green-sharp">
+                            <span data-counter="counterup" data-value="10">
+                                <a href="@Url.Action("OnPremVistors","Home")" class="large font_blue_dark">
+                                    <h1 class="large font_green">@Model.VisitorsOnPremise</h1>
+                                </a>
+                            </span>
+                        </h3>
+                        <small>VISITOR ON PREMISE</small>
+                    </div>
+                    <div class="icon pull-right font_26">
+                        <i class="icon-home"></i>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <ul class="flexbox flex-justified text-center my-30">
+                    @{
+                        if (Model.VisitorsOnPremise != 0)
+                        {
+                            var last = Model.VisitorTypes.Last();
+                            foreach (var c in Model.VisitorTypes)
+                            {
+                                var classstyle = "br-1";
+                                if (c.Equals(last))
+                                {
+                                    classstyle = "";
+                                }
+                                <li class="@classstyle">
+                                    <div class="font-size-18">@c.TypeCount</div>
+                                    <small><b>@c.Category</b></small>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <div class="font-size-18">&nbsp;</div>
+                                <small><b>&nbsp;</b></small>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="dashboard-stat2  dashboard box_blue">
+                <div class="display">
+                    <div class="number pull-left">
+                        <h3 class="font-green-sharp">
+                            <span data-counter="counterup" data-value="10">
+                                <a href="@Url.Action("OnPremStaffs","Home")">
+                                    <h1 class="large font_blue_dark">@Model.StaffOnPremise</h1>
+                                </a>
+                            </span>
+                        </h3>
+                        <small>STAFF ON PREMISE</small>
+                    </div>
+                    <div class="icon pull-right font_26">
+                        <i class="icon-user"></i>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <ul class="flexbox flex-justified text-center my-30">
+                    @{
+                        if (Model.StaffOnPremise != 0)
+                        {
+                            var last = Model.StaffTypes.Last();
+                            foreach (var c in Model.StaffTypes)
+                            {
+                                var classstyle = "br-1";
+                                if (c.Equals(last))
+                                {
+                                    classstyle = "";
+                                }
+                                <li class="@classstyle">
+                                    <div class="font-size-18">@c.TypeCount</div>
+                                    <small><b>@c.Category</b></small>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <div class="font-size-18">&nbsp;</div>
+                                <small><b>&nbsp;</b></small>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="dashboard-stat2  dashboard box_blue">
+                <div class="display">
+                    <div class="number pull-left">
+                        <h3 class="font-red-haze">
+                            <span data-counter="counterup" data-value="10">
+                                <a href="@Url.Action("OverstayedVisitors","Home")">
+                                    <h1 class="large font_red">
+                                        @Model.NowVisitorsOverstayed
+                                    </h1>
+                                </a>
+                            </span>
+                        </h3>
+                        <small>VISITOR OVERSTAYED</small>
+                    </div>
+                    <div class="icon pull-right font_26">
+                        <i class="icon-dislike"></i>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <ul class="flexbox flex-justified text-center my-30">
+                    @{
+                        if (Model.NowVisitorsOverstayed != 0)
+                        {
+                            var last = Model.VisitorOverstayType.Last();
+                            foreach (var c in Model.VisitorOverstayType)
+                            {
+                                var classstyle = "br-1";
+                                if (c.Equals(last))
+                                {
+                                    classstyle = "";
+                                }
+                                <li class="@classstyle">
+                                    <div class="font-size-18">@c.TypeCount</div>
+                                    <small><b>&gt; @c.Category hours</b></small>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <div class="font-size-18">&nbsp;</div>
+                                <small><b>&nbsp;</b></small>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="dashboard-stat2  dashboard box_blue">
+                <div class="display">
+                    <div class="number pull-left">
+                        <h3 class="font-red-haze">
+                            <span data-counter="counterup" data-value="10">
+                                <a href="@Url.Action("OverstayedStaffs","Home")">
+                                    <h1 class="large font_purple">
+                                        @Model.NowStaffOverstayed
+                                    </h1>
+                                </a>
+                            </span>
+                        </h3>
+                        <small>STAFF OVERSTAYED</small>
+                    </div>
+                    <div class="icon pull-right">
+                        <i class="icon-ban"></i>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <ul class="flexbox flex-justified text-center my-30">
+                    @{
+                        if (Model.NowStaffOverstayed != 0)
+                        {
+                            var last = Model.StaffOverstayType.Last();
+                            foreach (var c in Model.StaffOverstayType)
+                            {
+                                var classstyle = "br-1";
+                                if (c.Equals(last))
+                                {
+                                    classstyle = "";
+                                }
+                                <li class="@classstyle">
+                                    <div class="font-size-18">@c.TypeCount</div>
+                                    <small><b>&gt; @c.Category hours</b></small>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <div class="font-size-18">&nbsp;</div>
+                                <small><b>&nbsp;</b></small>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <!--/row-->
+    <!-- end of info section-->
+    <!-- AC section -->
+
+    <div class="portlet box">
+        <div class="portlet-title">
+            <div class="caption pull-left">
+                <i class="fa fa-gift"></i>Access Control
+            </div>
+            <div class="tools pull-right">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body form">
+            <!-- BEGIN FORM-->
+            <form action="#" class="form-horizontal">
+                <div class="form-body">
+                    <h3 class="form-section">Check In</h3> <!-- Site | Location (Device)-->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="control-label col-md-4" style="text-align:left;padding-left:15px;">Identity No:</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" placeholder="Scan / Enter" id="txtNRIC">
+                                </div>
+                            </div>
+                            <!-- Show below after scanning identify no.-->
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    <div id="pnlScanFinger" style="display: none;">
+                                        <!-- Change label to Enroll Fingerprint if scanning fails -->
+                                        <div class="col-md-4">
+                                            <img src="~/assets3/global/img/fingerprint.png" width="100px" id="imgScanFinger" />
+                                        </div>
+                                        <label class="control-label col-md-6" id="lblScanFinger">Scan Fingerprint:</label>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Show and hide for this row -->
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-8">
+                            <!-- ONLY DISPLAY 1 MESSAGE AT ANYONE TIME-->
+                            <div class="simple vertical green alertbox" id="alertbox-Info">
+                                <div class="grid-title no-border">
+                                    <h4>Information</h4>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"></a>
+                                    </div>
+                                </div>
+                                <div class="grid-body no-border">
+                                    <div class="row-fluid ">
+                                        <ul>
+                                            <li>Vendors and visitors must register at the guard house</li>
+                                            <li>Visitors must check in with security</li>
+                                            <li>Please enter/scan your ID Number (NRIC/FIN/PASSPORT) to continue</li>
+                                            <li>Prepare your thumbprint for enrollment or verification</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                           
+                            <div class="alert alert-block alert-info fade in alertbox" style="display:none;" id="alertbox-noFinger">
+                                <!--<button type="button" class="close" data-dismiss="alert"></button>-->
+                                <h4 class="alert-heading"><i class="icon-warning-sign"></i>Fingerprint Not Found!</h4>
+                                <p id="alertbox-noFinger-Message"> Please enroll by scanning your fingerprint. </p>
+                                @*<div class="button-set">
+                                        <button class="btn btn-white btn-cons" type="button">OK</button>
+                                    </div>*@
+                            </div>
+                            <div class="alert alert-block alert-info fade in alertbox" style="display:none;" id="alertbox-FoundId">
+                                <!--<button type="button" class="close" data-dismiss="alert"></button>-->
+                                <h4 class="alert-heading"><i class="icon-warning-sign"></i> ID Found!</h4>
+                                <p id="alertbox-FoundId-Message"> Please scan your fingerprint. </p>
+                                @*<div class="button-set">
+                                        <button class="btn btn-white btn-cons" type="button">OK</button>
+                                    </div>*@
+                            </div>
+                            <div class="alert alert-block alert-success fade in alertbox" id="alertbox-GrantAccess" style="min-height: 100px;">
+                                <!--<button type="button" class="close" data-dismiss="alert"></button>-->
+                                <h4 class="alert-heading"><i class="icon-warning-sign"></i> Access Granted!</h4>
+                                <div id="alertbox-GrantAccess-Message" style="display:none;" class="row">
+
+                                    <div class="col-md-4">Register Your Pass No #</div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" id="txtPassNo" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="button" class="btn btn_blue" id="btnRegPass" value="Proceed" />
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-top:15px;display:none;" id="divShowVisitorPic">
+                                    <div class="col-md-4">
+                                        Snap Photo
+                                        <img style="width:100px;height:100px" class="img-circle" id="imgPreview" src="~/assets3/layouts/layout/img/take_photo.png" />
+                                        <input type="hidden" value="" name="Photo" id="ipt_Photo" />
+                                        <canvas id="capturedPhoto" style="display: none;position:absolute;"></canvas>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a class="btn btn_blue green" id="btnSnap" style="margin-bottom: 10px">Take Photo</a>
+                                        <a class="btn btn_blue" id="btnUpdatePic" style="margin-bottom: 10px;">Check In</a>
+                                        <a class="btn btn_blue" id="btnSkip" style="margin-bottom: 10px">Skip This Step</a>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <div class="col-md-10" id="divPhotoRes" style="display:none;">
+                                            Update Success!
+                                        </div>
+                                        <div id="pnlVideo" style="display: none">
+                                            <div class="col-md-7">
+                                                <video id="video" width="100" height="100" autoplay></video>
+                                                <canvas id="canvas" style="display: none" width="500" height="500"></canvas>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <a class="btn btn_blue" id="btnConfirm" style="margin-top:30px">Snap</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert alert-block alert-warning fade in alertbox" style="display: none;" id="alertbox-Overstay">
+                                <!--<button type="button" class="close" data-dismiss="alert"></button>-->
+                                <h4 class="alert-heading"><i class="icon-warning-sign"></i> Overstayed!</h4>
+                                <p id="alertbox-Overstay-Message"> Please verify reason. </p>
+                                <div class="button-set">
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--/span-->
+                    </div>
+                    <!--/row-->
+                </div>
+            </form>
+            <!-- END FORM-->
+        </div>
+    </div>
+    <!-- end of ac section -->
+    <!-- Listing -->
+    <!--
+    Do your own loading of data. This should list all the visitation for current date.
+    Refer to Staff/Index.cshtml for loading in javascript
+    -->
+    <br />
+
+    <label style="margin-left:10px;display:none;" id="extraSearch">
+        <button id="btnClearState" class="btn btn_blue">Reset</button>
+    </label>
+
+    <table id="tblData" class="table table-hover dataTable no-footer" style="width:100%;">
+        <thead>
+            <tr role="row">
+                <th>Profile</th>
+                <th>ID No.</th>
+                <th>Pass No.</th>
+                <th>Name</th>
+                <th>Host Name</th>
+                <th>Visit From </th>
+                <th>Visit To </th>
+                <th>Type</th>
+                <th>Direction</th>
+                <th>Overstayed</th>
+                <th>Time</th>
+                <th>Device</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+    <!-- end of Listing -->
+}
+
+@section QuickAction
+{
+
+}
+
+@section scripts {
+    <script>
+        //TODO replace with config api
+        var config = {
+            urlRegFinger : '@regFingerUrl',
+            urlCompareFinger: '@compareFingerUrl',
+            NeedChangePass:'@needChangePass'
+        }
+        var dataContext = {
+            lastMsgTime: null,
+            regId: null,
+            isStaff: false,
+            profileId: null
+        };
+
+    </script>
+
+    <script src="~/Scripts/Components/data-api.js"></script>
+    <script src="~/Scripts/BlockUI.js"></script>
+    <script src="~/Scripts/Components/datatable-ex.js"></script>
+    <script src="~/Scripts/Components/webcam-ex.js"></script>
+    <script src="~/Scripts/Components/access-control.js"></script>
+    <script src="~/Scripts/Components/checkin.js"></script>
+
+}
+
